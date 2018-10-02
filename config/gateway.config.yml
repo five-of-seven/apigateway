@@ -2,7 +2,7 @@ http:
   port: 8080
 admin:
   port: 9876
-  hostname: 18.191.210.247
+  hostname: localhost
 apiEndpoints:
   signupapi:
     host: '*'
