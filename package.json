@@ -1,0 +1,17 @@
+{
+  "name": "community-gateway",
+  "description": "Express Gateway Instance Bootstraped from Command Line",
+  "repository": {},
+  "license": "UNLICENSED",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:pm2-dev": "pm2-dev server.js",
+    "start": "if [[ ${NODE_ENV} = production ]]; then pm2-docker start -i 0 server.js; else pm2-dev server.js; fi"
+  },
+  "dependencies": {
+    "express-gateway": "^1.12.1",
+    "pm2": "^3.1.3"
+  }
+}
