@@ -1,0 +1,36 @@
+http:
+  port: 8080
+admin:
+  port: 9876
+  hostname: localhost
+apiEndpoints:
+  signupapi:
+    host: '*'
+    paths:
+      - '/signup'
+      - '/signup/createaccount'
+      - '/signup/*'
+serviceEndpoints:
+  signupservice:
+    url: 'http://18.224.138.143'
+
+policies:
+  - basic-auth
+  - cors
+  - expression
+  - key-auth
+  - log
+  - oauth2
+  - proxy
+  - rate-limit
+pipelines:
+  default:
+    apiEndpoints:
+      - signupapi
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: signupservice
+              changeOrigin: true
