@@ -10,27 +10,39 @@ apiEndpoints:
       - '/signup'
       - '/signup/createaccount'
       - '/signup/*'
+  loginapi:
+    host: '*'
+    paths:
+      - '/signin'
+      - '/signin/*'
 serviceEndpoints:
   signupservice:
-    url: 'http://18.224.138.143'
-
+    url: ${SIGNUP_URL:-'http://localhost:3000/'}
+  loginservice:
+    url: ${LOGIN_URL:-'http://localhost:50000/'}
 policies:
-  - basic-auth
-  - cors
-  - expression
-  - key-auth
-  - log
-  - oauth2
+  # - basic-auth
+  # - cors
+  # - expression
+  # - key-auth
+  # - log
+  # - oauth2
   - proxy
-  - rate-limit
+  # - rate-limit
 pipelines:
-  default:
+  pipeline1:
     apiEndpoints:
       - signupapi
     policies:
-    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
-    # - key-auth:
       - proxy:
           - action:
               serviceEndpoint: signupservice
+              changeOrigin: true
+  pipeline2:
+    apiEndpoints:
+      - loginapi
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: loginservice
               changeOrigin: true
