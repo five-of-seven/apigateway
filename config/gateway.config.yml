@@ -15,11 +15,18 @@ apiEndpoints:
     paths:
       - '/signin'
       - '/signin/*'
+  tasksapi:
+    host: '*'
+    paths:
+      - '/*'
+      - '/'
 serviceEndpoints:
   signupservice:
     url: ${SIGNUP_URL:-'http://localhost:3000/'}
   loginservice:
     url: ${LOGIN_URL:-'http://localhost:50000/'}
+  taskservice:
+    url: 'http://18.144.23.45/'
 policies:
   # - basic-auth
   # - cors
@@ -45,4 +52,12 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: loginservice
+              changeOrigin: true
+  pipeline3:
+    apiEndpoints:
+      - tasksapi
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: taskservice
               changeOrigin: true
