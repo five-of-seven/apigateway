@@ -30,6 +30,11 @@ apiEndpoints:
     host: '*'
     paths:
       - '/karma-points_put'
+  tasksdbapi:
+    host: '*'
+    paths:
+      - '/tasksdb'
+      - '/tasksdb/*'
 serviceEndpoints:
   signupservice:
     url: ${SIGNUP_URL:-'http://localhost:3000/'}
@@ -41,6 +46,8 @@ serviceEndpoints:
     url: https://u0mxny2nq6.execute-api.us-east-2.amazonaws.com/default
   karmaputservice:
     url: https://uiwr3rzqge.execute-api.us-east-2.amazonaws.com/default
+  taskdbservice:
+    url: http://18.224.150.52/
 policies:
   # - basic-auth
   - cors
@@ -89,6 +96,14 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: karmagetservice
+              changeOrigin: true
+  tasksdbpipeline:
+    apiEndpoints:
+      - tasksdbapi
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: taskdbservice
               changeOrigin: true
   karmaputpipeline:
     apiEndpoints:
