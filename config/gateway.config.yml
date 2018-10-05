@@ -22,10 +22,14 @@ apiEndpoints:
     paths:
       - '/bundle.js'
       - '/'
-  karmaapi:
+  karmagetapi:
     host: '*'
     paths:
       - '/karma-points_get'
+  karmaputapi:
+    host: '*'
+    paths:
+      - '/karma-points_put'
 serviceEndpoints:
   signupservice:
     url: ${SIGNUP_URL:-'http://localhost:3000/'}
@@ -33,8 +37,10 @@ serviceEndpoints:
     url: ${LOGIN_URL:-'http://localhost:50000/'}
   taskservice:
     url: http://18.144.23.45/
-  karmaservice:
+  karmagetservice:
     url: https://u0mxny2nq6.execute-api.us-east-2.amazonaws.com/default
+  karmaputservice:
+    url: https://uiwr3rzqge.execute-api.us-east-2.amazonaws.com/default
 policies:
   # - basic-auth
   - cors
@@ -53,7 +59,7 @@ pipelines:
           - action:
               serviceEndpoint: signupservice
               changeOrigin: true
-  pipeline2:
+  loginpipeline:
     apiEndpoints:
       - loginapi
     policies:
@@ -61,7 +67,7 @@ pipelines:
           - action:
               serviceEndpoint: loginservice
               changeOrigin: true
-  pipeline3:
+  taskspipeline:
     apiEndpoints:
       - tasksapi
     policies:
@@ -69,9 +75,9 @@ pipelines:
           - action:
               serviceEndpoint: taskservice
               changeOrigin: true
-  pipeline4:
+  karmagetpipeline:
     apiEndpoints:
-      - karmaapi
+      - karmagetapi
     policies:
       - log:
         - action:
@@ -82,5 +88,20 @@ pipelines:
             message: request originalUrl is - ${req.originalUrl}
       - proxy:
           - action:
-              serviceEndpoint: karmaservice
+              serviceEndpoint: karmagetservice
+              changeOrigin: true
+  karmaputpipeline:
+    apiEndpoints:
+      - karmaputapi
+    policies:
+      - log:
+        - action:
+            message: apiendpoint is - ${apiEndpoint.scopes}
+        - action:
+            message: request method is - ${req.method}
+        - action:
+            message: request originalUrl is - ${req.originalUrl}
+      - proxy:
+          - action:
+              serviceEndpoint: karmaputservice
               changeOrigin: true
