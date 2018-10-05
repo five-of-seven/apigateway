@@ -1,5 +1,7 @@
 http:
   port: 8080
+https:
+  port: 9443
 admin:
   port: 9876
   hostname: localhost
@@ -18,26 +20,38 @@ apiEndpoints:
   tasksapi:
     host: '*'
     paths:
-      - '/*'
+      - '/bundle.js'
       - '/'
+  karmaapi:
+    host: '*'
+    paths:
+      - '/karma-points_get'
+      - '/karma-points_get*'
+      - '/karma-points_get/*'
+      - '/karma-points_get?id'
+      - '/karma-points_get:id'
+      - '/karma-points_get/:id'
+      - '/default*'
 serviceEndpoints:
   signupservice:
     url: ${SIGNUP_URL:-'http://localhost:3000/'}
   loginservice:
     url: ${LOGIN_URL:-'http://localhost:50000/'}
   taskservice:
-    url: 'http://18.144.23.45/'
+    url: http://18.144.23.45/
+  karmaservice:
+    url: https://u0mxny2nq6.execute-api.us-east-2.amazonaws.com/default
 policies:
   # - basic-auth
-  # - cors
+  - cors
   # - expression
   # - key-auth
-  # - log
+  - log
   # - oauth2
   - proxy
   # - rate-limit
 pipelines:
-  pipeline1:
+  signuppipeline:
     apiEndpoints:
       - signupapi
     policies:
@@ -60,4 +74,19 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: taskservice
+              changeOrigin: true
+  pipeline4:
+    apiEndpoints:
+      - karmaapi
+    policies:
+      - log:
+        - action:
+            message: apiendpoint is - ${apiEndpoint.scopes}
+        - action:
+            message: request method is - ${req.method}
+        - action:
+            message: request originalUrl is - ${req.originalUrl}
+      - proxy:
+          - action:
+              serviceEndpoint: karmaservice
               changeOrigin: true
