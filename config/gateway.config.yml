@@ -26,12 +26,6 @@ apiEndpoints:
     host: '*'
     paths:
       - '/karma-points_get'
-      - '/karma-points_get*'
-      - '/karma-points_get/*'
-      - '/karma-points_get?id'
-      - '/karma-points_get:id'
-      - '/karma-points_get/:id'
-      - '/default*'
 serviceEndpoints:
   signupservice:
     url: ${SIGNUP_URL:-'http://localhost:3000/'}
