@@ -94,6 +94,12 @@ pipelines:
     apiEndpoints:
       - karmaputapi
     policies:
+      - cors:
+        - action:
+            origin: true
+            methods: HEAD,PUT,PATCH,POST,DELETE
+            preflightContinue: false
+            optionsSuccessStatus: 204
       - log:
         - action:
             message: apiendpoint is - ${apiEndpoint.scopes}
