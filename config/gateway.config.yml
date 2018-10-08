@@ -28,7 +28,7 @@ apiEndpoints:
     host: '*'
     paths:
       - '/bundle.js'
-      - '/'
+      - '/service'
   karmagetapi:
     host: '*'
     paths:
