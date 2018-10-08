@@ -4,13 +4,6 @@
   "properties": {
     "username": {
       "type": "string"
-    },
-    "redirectUri": {
-      "type": "string",
-      "format": "uri"
     }
-  },
-  "required": [
-    "username"
-  ]
+  }
 }

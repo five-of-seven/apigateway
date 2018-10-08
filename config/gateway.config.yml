@@ -1,11 +1,18 @@
 http:
   port: 8080
-https:
-  port: 9443
 admin:
   port: 9876
   hostname: localhost
 apiEndpoints:
+  adminAPI:
+    host: ${LOGIN_URL:-'http://localhost:50000/'}
+    paths:
+      - '/users'
+  landingpageapi:
+    host: '*'
+    paths:
+      - '/'
+      - '/static/js/bundle.js'
   signupapi:
     host: '*'
     paths:
@@ -36,12 +43,16 @@ apiEndpoints:
       - '/tasksdb'
       - '/tasksdb/*'
 serviceEndpoints:
+  adminBackend:
+    url: 'http://localhost:9876' # this is EG admin API
+  landingpageservice:
+    url: http://18.217.151.202
   signupservice:
     url: ${SIGNUP_URL:-'http://localhost:3000/'}
   loginservice:
     url: ${LOGIN_URL:-'http://localhost:50000/'}
   taskservice:
-    url: http://18.144.23.45/
+    url: http://54.183.163.131/
   karmagetservice:
     url: https://u0mxny2nq6.execute-api.us-east-2.amazonaws.com/default
   karmaputservice:
@@ -58,6 +69,25 @@ policies:
   - proxy
   # - rate-limit
 pipelines:
+  adminAPIpipeline:
+    apiEndpoints:
+      - adminAPI
+    policies:
+    #  - key-auth: # this is intentionaly disabled to allow temporary access
+      - proxy:
+          - action:
+              serviceEndpoint: adminBackend
+  landingpagepipeline:
+    apiEndpoints:
+      - landingpageapi
+    policies:
+      - log:
+        - action:
+            message: ${req.originalUrl} ${req.method}
+      - proxy:
+          - action:
+              serviceEndpoint: landingpageservice
+              changeOrigin: true
   signuppipeline:
     apiEndpoints:
       - signupapi
@@ -82,47 +112,40 @@ pipelines:
           - action:
               serviceEndpoint: taskservice
               changeOrigin: true
-  karmagetpipeline:
-    apiEndpoints:
-      - karmagetapi
-    policies:
-      - log:
-        - action:
-            message: apiendpoint is - ${apiEndpoint.scopes}
-        - action:
-            message: request method is - ${req.method}
-        - action:
-            message: request originalUrl is - ${req.originalUrl}
-      - proxy:
-          - action:
-              serviceEndpoint: karmagetservice
-              changeOrigin: true
-  tasksdbpipeline:
-    apiEndpoints:
-      - tasksdbapi
-    policies:
-      - proxy:
-          - action:
-              serviceEndpoint: taskdbservice
-              changeOrigin: true
-  karmaputpipeline:
-    apiEndpoints:
-      - karmaputapi
-    policies:
-      - cors:
-        - action:
-            origin: true
-            methods: HEAD,PUT,PATCH,POST,DELETE
-            preflightContinue: false
-            optionsSuccessStatus: 204
-      - log:
-        - action:
-            message: apiendpoint is - ${apiEndpoint.scopes}
-        - action:
-            message: request method is - ${req.method}
-        - action:
-            message: request originalUrl is - ${req.originalUrl}
-      - proxy:
-          - action:
-              serviceEndpoint: karmaputservice
-              changeOrigin: true
+  # karmagetpipeline:
+  #   apiEndpoints:
+  #     - karmagetapi
+  #   policies:
+  #     - log:
+  #       - action:
+  #           message: apiendpoint is - ${apiEndpoint.scopes}
+  #       - action:
+  #           message: request method is - ${req.method}
+  #       - action:
+  #           message: request originalUrl is - ${req.originalUrl}
+  #     - proxy:
+  #         - action:
+  #             serviceEndpoint: karmagetservice
+  #             changeOrigin: true
+  # karmaputpipeline:
+  #   apiEndpoints:
+  #     - karmaputapi
+  #   policies:
+  #     - cors:
+  #       - action:
+  #           origin: true
+  #           methods: HEAD,PUT,PATCH,POST,DELETE
+  #           preflightContinue: false
+  #           optionsSuccessStatus: 204
+  #     - log:
+  #       - action:
+  #           message: apiendpoint is - ${apiEndpoint.scopes}
+  #       - action:
+  #           message: request method is - ${req.method}
+  #       - action:
+  #           message: request originalUrl is - ${req.originalUrl}
+  #     - proxy:
+  #         - action:
+  #             serviceEndpoint: karmaputservice
+  #             changeOrigin: true
+
