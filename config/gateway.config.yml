@@ -37,6 +37,11 @@ apiEndpoints:
     host: '*'
     paths:
       - '/karma-points_put'
+  tasksdbapi:
+    host: '*'
+    paths:
+      - '/tasksdb'
+      - '/tasksdb/*'
 serviceEndpoints:
   adminBackend:
     url: 'http://localhost:9876' # this is EG admin API
@@ -52,6 +57,8 @@ serviceEndpoints:
     url: https://u0mxny2nq6.execute-api.us-east-2.amazonaws.com/default
   karmaputservice:
     url: https://uiwr3rzqge.execute-api.us-east-2.amazonaws.com/default
+  taskdbservice:
+    url: http://18.224.150.52/
 policies:
   # - basic-auth
   - cors
@@ -141,3 +148,4 @@ pipelines:
   #         - action:
   #             serviceEndpoint: karmaputservice
   #             changeOrigin: true
+
