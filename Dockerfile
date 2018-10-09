@@ -26,7 +26,7 @@ RUN npm install
 COPY . .
 
 
-EXPOSE 8080
+EXPOSE 8080 9876
 
 # The following command will use NODE_ENV to run pm2-docker or pm2-dev
 CMD ["npm", "start"]
