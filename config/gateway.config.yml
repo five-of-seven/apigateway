@@ -5,9 +5,8 @@ admin:
   hostname: localhost
 apiEndpoints:
   adminAPI:
-    host:
+    host: '*'
       # - ${LOGIN_URL:-'http://localhost:50000/'}
-      - '*'
     paths:
       - '/users'
   landingpageapi:
