@@ -6,7 +6,7 @@ db:
 
 #plugins:
   # express-gateway-plugin-example:
-  #   param1: 'param from system.config' 
+  #   param1: 'param from system.config'
 
 crypto:
   cipherKey: sensitiveKey
@@ -20,6 +20,11 @@ session:
   saveUninitialized: false
 accessTokens:
   timeToExpiry: 7200000
+  tokenType: 'jwt'
+  issuer: 'express-gateway'
+  audience: 'something'
+  subject: 'somebody'
+  secretOrPrivateKey: 'ssssst'
 refreshTokens:
   timeToExpiry: 7200000
 authorizationCodes:

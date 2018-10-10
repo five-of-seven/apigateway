@@ -25,6 +25,12 @@ apiEndpoints:
     paths:
       - '/signin'
       - '/signin/*'
+      - '/signingin'
+  loggedinapi:
+    host: '*'
+    paths:
+      - '/signedin'
+      - '/signedinhome'
   tasksapi:
     host: '*'
     paths:
@@ -52,6 +58,8 @@ serviceEndpoints:
     url: ${SIGNUP_URL:-'http://localhost:3000/'}
   loginservice:
     url: ${LOGIN_URL:-'http://localhost:50000/'}
+  loggedinservice:
+    url: ${LOGIN_URL:-'http://localhost:50000/'}
   taskservice:
     url: http://54.183.163.131/
   karmagetservice:
@@ -66,8 +74,9 @@ policies:
   # - expression
   # - key-auth
   - log
-  # - oauth2
   - proxy
+  - jwt
+  - oauth2
   # - rate-limit
 pipelines:
   adminAPIpipeline:
@@ -104,6 +113,29 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: loginservice
+              changeOrigin: true
+  loggedinpipeline:
+    apiEndpoints:
+      - loggedinapi
+    policies:
+      - oauth2:
+          action:
+            jwt:
+              issuer: express-gateway
+              audience: something
+              subject: somebody
+              secretOrPublicKey: ssssst
+              checkCredentialExistence: false
+      - log:
+        - action:
+            message: apiendpoint is - ${apiEndpoint.scopes}
+        - action:
+            message: request method is - ${req.method}
+        - action:
+            message: request originalUrl is - ${req.originalUrl}
+      - proxy:
+          - action:
+              serviceEndpoint: loggedinservice
               changeOrigin: true
   taskspipeline:
     apiEndpoints:
